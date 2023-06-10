@@ -93,7 +93,8 @@ async function render(_opts = {}) {
   });
 
   page.on('response', (response) => {
-    if (response.status >= 400) {
+    //response.status
+    if (response._status >= 400) {
       this.failedResponses.push(response);
     }
 
@@ -140,22 +141,24 @@ async function render(_opts = {}) {
 
     if (this.failedResponses.length) {
       logger.warn(`Number of failed requests: ${this.failedResponses.length}`);
+      
       this.failedResponses.forEach((response) => {
         logger.warn(`${response.status} ${response.url}`);
       });
 
-      if (opts.failEarly === 'all') {
-        const err = new Error(`${this.failedResponses.length} requests have failed. See server log for more details.`);
-        err.status = 412;
-        throw err;
-      }
+     // if (opts.failEarly === 'all') {
+      const err = new Error(`${this.failedResponses.length} requests have failed. See server log for more details.`);
+      err.status = 500;
+      throw err;
+      //}
     }
-    if (opts.failEarly === 'page' && this.mainUrlResponse.status !== 200) {
+    
+    /*if (opts.failEarly === 'page' && this.mainUrlResponse._status !== 200) {
       const msg = `Request for ${opts.url} did not directly succeed and returned status ${this.mainUrlResponse.status}`;
       const err = new Error(msg);
       err.status = 412;
       throw err;
-    }
+    }*/
 
     logger.info('Rendering ..');
     if (config.DEBUG_MODE) {
