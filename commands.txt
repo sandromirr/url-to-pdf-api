@@ -1,0 +1,7 @@
+http://localhost:9000/api/render?url=https://httpstat.us/405&pdf.format=A5&pdf.landscape=true&ignoreHttpsErrors=true
+
+
+
+docker run --name=pdf-port -p 9002:9000 -e ALLOW_HTTP=true -d pdf-generation
+
+docker build -t pdf-generation .

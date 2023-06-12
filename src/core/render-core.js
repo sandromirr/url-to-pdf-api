@@ -144,13 +144,18 @@ async function render(_opts = {}) {
       
       this.failedResponses.forEach((response) => {
         logger.warn(`${response.status} ${response.url}`);
+        if(response._status >= 400){
+          const err = new Error(`Requests have failed. See server log for more details.`);
+          err.status = 500;
+          throw err;
+        }
       });
 
-     // if (opts.failEarly === 'all') {
+     if (opts.failEarly === 'all') {
       const err = new Error(`${this.failedResponses.length} requests have failed. See server log for more details.`);
       err.status = 500;
       throw err;
-      //}
+      }
     }
     
     /*if (opts.failEarly === 'page' && this.mainUrlResponse._status !== 200) {
